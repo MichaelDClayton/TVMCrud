@@ -28,6 +28,7 @@ public class UserController {
 
     @GetMapping("/users")
     Collection<User> users() {
+        log.info("retrieved all users!");
         return userRepository.findAll();
     }
 

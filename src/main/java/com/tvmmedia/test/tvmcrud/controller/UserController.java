@@ -39,14 +39,19 @@ public class UserController {
         return user.map(response -> ResponseEntity.ok().body(response))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-
     @PostMapping("/user")
+    ResponseEntity<User> createUser(@Valid @RequestBody User user) throws URISyntaxException {
+        log.info("Request to create user: {}", user);
+        User savedUser = userRepository.save(user);
+        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+    }
+   /* @PostMapping("/user")
     ResponseEntity<User> createUser(@Valid @RequestBody User user) throws URISyntaxException {
         log.info("Request to create user: {}", user);
         User result = userRepository.save(user);
         return ResponseEntity.created(new URI("/api/user/" + result.getId()))
                 .body(result);
-    }
+    }*/
 
     @PutMapping("/user/{id}")
     ResponseEntity<User> updateUser(@Valid @RequestBody User user) {

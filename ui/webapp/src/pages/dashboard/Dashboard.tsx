@@ -7,6 +7,7 @@ const [users, setUsers] = useState<User[]>([]);
 const [error, setErrors] = useState(null);
 const [isLoading, setLoader] = useState(false);
 useEffect(() => {
+    setLoader(true);
     //call backend api.
     apiClient
     .get("http://localhost:8080/api/users")
@@ -22,6 +23,8 @@ useEffect(() => {
 
 
 return <div>
+{isLoading && <p>Loading...</p>}
+{error && <p>{error}</p>}
 <UserList users={users}/>
 </div>
     };

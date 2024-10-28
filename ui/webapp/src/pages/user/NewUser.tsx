@@ -1,10 +1,5 @@
 import {useFormik} from "formik";
-import * as Yup from 'yup';
-const newUserValidationSchema = Yup.object({
-    firstName: Yup.string().required('First name is required'),
-    lastName: Yup.string().required('Last name is required'),
-    email: Yup.string().required('Email is required')
-    })
+import userValidationSchema from "../../validation/userValidationSchema"
 const NewUser = () => {
     const formik = useFormik({
         initialValues:{
@@ -15,7 +10,7 @@ const NewUser = () => {
         onSubmit:(values: User) =>{
             console.log(values);
             },
-        validationSchema:newUserValidationSchema
+        validationSchema:userValidationSchema
         });
     return(
            <div className="d-flex justify-content-center align-items-center mt-2">

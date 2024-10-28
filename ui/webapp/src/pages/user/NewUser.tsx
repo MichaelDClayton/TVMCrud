@@ -2,8 +2,10 @@ import {useFormik} from "formik";
 import userValidationSchema from "../../validation/userValidationSchema";
 import {saveOrUpdateUser} from "../../services/user-service";
 import {useState} from 'react';
+import {useNavigate} from "react-router-dom";
 
 const NewUser = () => {
+    const navigate = useNavigate();
     const [error, setErrors] = useState<string>("")
     const formik = useFormik({
         initialValues:{
@@ -13,9 +15,12 @@ const NewUser = () => {
             },
         onSubmit:(values: User) =>{
             saveOrUpdateUser(values)
-            .then((response) => console.log(response))
+            .then((response) => {
+                if(response && response.status == 201){
+                    navigate("/");
+                    }
+                })
             .catch((error) => {
-            console.log(error);
             setErrors(error.message);
             });
         },

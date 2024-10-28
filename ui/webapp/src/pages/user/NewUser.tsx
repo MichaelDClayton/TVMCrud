@@ -1,6 +1,10 @@
 import {useFormik} from "formik";
-import userValidationSchema from "../../validation/userValidationSchema"
+import userValidationSchema from "../../validation/userValidationSchema";
+import {saveOrUpdateUser} from "../../services/user-service";
+import {useState} from 'react';
+
 const NewUser = () => {
+    const [error, setErrors] = useState<string>("")
     const formik = useFormik({
         initialValues:{
             firstName: "",
@@ -8,12 +12,18 @@ const NewUser = () => {
             email: ""
             },
         onSubmit:(values: User) =>{
-            console.log(values);
-            },
+            saveOrUpdateUser(values)
+            .then((response) => console.log(response))
+            .catch((error) => {
+            console.log(error);
+            setErrors(error.message);
+            });
+        },
         validationSchema:userValidationSchema
         });
     return(
            <div className="d-flex justify-content-center align-items-center mt-2">
+           {error && <p>{error}</p>}
                 <div className="container col-sm-4 col-sm-8 col-xs-12">
                     <form onSubmit={formik.handleSubmit}>
                         <div className="mb-3">

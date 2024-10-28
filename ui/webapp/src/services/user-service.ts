@@ -3,4 +3,7 @@ import { User } from "../model/User";
 export const getUsers = () => {
     return apiClient.get<User[]>('http://localhost:8080/api/users');
     }
-export default getUsers
+export const getUserById = (id: string) => {
+        return apiClient.get<User>(`http://localhost:8080/api/user/${id}`);
+    }
+

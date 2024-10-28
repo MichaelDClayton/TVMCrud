@@ -15,6 +15,6 @@ const useUserById = (id: string) => {
            .finally(() => setLoader(false));
            }
         }, []);
-        return {user, errors, isLoading}
+        return {user, errors, isLoading, setLoader, setErrors}
     }
 export default useUserById

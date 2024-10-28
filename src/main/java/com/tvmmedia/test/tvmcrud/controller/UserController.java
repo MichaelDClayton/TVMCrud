@@ -64,6 +64,6 @@ public class UserController {
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         log.info("Request to delete user: {}", id);
         userRepository.deleteById(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

@@ -7,3 +7,7 @@ export const getUserById = (id: string) => {
         return apiClient.get<User>(`http://localhost:8080/api/user/${id}`);
     }
 
+export const deleteUserById = (id: string) =>{
+        return apiClient.delete<void>(`http://localhost:8080/api/user/${id}`);
+    }
+

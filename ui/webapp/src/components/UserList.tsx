@@ -4,7 +4,7 @@ interface Props {
     users: User[];
     }
 const UserList = ({users}: Props) => {
-            return (
+            /* return (
                 <div>
             <table border={1}>
                 <thead>
@@ -23,7 +23,29 @@ const UserList = ({users}: Props) => {
                     </tr>)}
                 </tbody>
             </table>
-            </div>);
+            </div>); */
+           return(
+            <div className="card">
+                <h5 className="card-header">
+                User
+                 </h5>
+
+                <div className="card-body">
+                {users.map(user =>
+                    <div key={user.id}>
+                    <div className="d-flex justify-content-between border-bottom-1 p-3 text-dark">
+                        <div className="card-title m-0">
+                        <h5>{user.firstName} {user.lastName}</h5>
+                        <span className="fst-italic">{user.email}</span>
+                       </div>
+                    </div>
+                    </div>
+                )}
+                </div>
+
+            </div>
+
+            );
 
     }
 export default UserList

@@ -2,24 +2,10 @@ import { useEffect, useState } from 'react';
 import { useParams } from "react-router-dom";
 import { getUserById } from "../../services/user-service";
 import { User } from "../../model/User";
+import useUserById from "../../hooks/useUserById"
 const UserDetails = () =>{
     const { id } = useParams<{id: string}>();
-    const [user, setUser] = useState<User[]>();
-    const [errors, setErrors] = useState<string>("");
-    const [isLoading, setLoader] = useState<boolean>(false);
-
-useEffect(() =>{
-    if(id){
-
-        setLoader(true);
-        getUserById(id)
-            .then((response) => setUser(response.data))
-            .catch((error) => setErrors(error.message))
-            .finally(() => setLoader(false));
-
-        }
-
-    }, []);
+    const {user, errors, isLoading} = useUserById(id!);
 
 
     return (
@@ -49,8 +35,7 @@ useEffect(() =>{
                             </table>
                         </div>
                     </div>
-
         </div>
         )
-    };
+    }
 export default UserDetails;

@@ -1,26 +1,68 @@
+import {useFormik} from "formik";
+import * as Yup from 'yup';
+const newUserValidationSchema = Yup.object({
+    firstName: Yup.string().required('First name is required'),
+    lastName: Yup.string().required('Last name is required'),
+    email: Yup.string().required('Email is required')
+    })
 const NewUser = () => {
+    const formik = useFormik({
+        initialValues:{
+            firstName: "",
+            lastName: "",
+            email: ""
+            },
+        onSubmit:(values: User) =>{
+            console.log(values);
+            },
+        validationSchema:newUserValidationSchema
+        });
     return(
            <div className="d-flex justify-content-center align-items-center mt-2">
                 <div className="container col-sm-4 col-sm-8 col-xs-12">
-                    <form>
+                    <form onSubmit={formik.handleSubmit}>
                         <div className="mb-3">
                             <label htmlFor="firstName" className="form-label">
                                 First Name
                             </label>
-                            <input type="text" id="firstName" className="form-control"/>
+                            <input type="text" id="firstName" className="form-control"
+                            value={formik.values.firstName}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            />
+                            {formik.touched.firstName && formik.errors.firstName ? <div className="text-danger fst-italic">
+                               {formik.errors.firstName}
+                                </div> : null
+                                }
                         </div>
                         <div className="mb-3">
                             <label htmlFor="lastName" className="form-label">
                                 Last Name
                             </label>
-                            <input type="text" id="lastName" className="form-control"/>
+                            <input type="text" id="lastName" className="form-control"
+                            value={formik.values.lastName}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            />
+                            {formik.touched.lastName && formik.errors.lastName ? <div className="text-danger fst-italic">
+                                                           {formik.errors.lastName}
+                                                            </div> : null
+                                                            }
                         </div>
                         <div className="mb-3">
                             <label htmlFor="email" className="form-label">
                                 Email
                             </label>
-                            <input type="text" id="email" className="form-control"/>
+                            <input type="email" id="email" className="form-control"
+                            value={formik.values.email}
+                            onChange={formik.handleChange}
+                            />
+                            {formik.touched.email && formik.errors.email ? <div className="text-danger fst-italic">
+                                                                                       {formik.errors.email}
+                                                                                        </div> : null
+                                                                                        }
                         </div>
+                        <button className="btn btn-sm btn-primary btn-outline-light" type="submit">Save</button>
                     </form>
                 </div>
             </div>

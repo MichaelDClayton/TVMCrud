@@ -1,12 +1,25 @@
 import {useFormik} from "formik";
 import userValidationSchema from "../../validation/userValidationSchema";
-import {saveOrUpdateUser} from "../../services/user-service";
-import {useState} from 'react';
-import {useNavigate} from "react-router-dom";
+import {saveOrUpdateUser, getUserById} from "../../services/user-service";
+import {useState, useEffect} from 'react';
+import {useNavigate, useParams} from "react-router-dom";
 
 const NewUser = () => {
+    const {id} = useParams<{id: string}>();
     const navigate = useNavigate();
-    const [error, setErrors] = useState<string>("")
+    const [error, setErrors] = useState<string>("");
+    const [isLoading, setLoader] = useState<boolean>(false);
+
+    useEffect(() => {
+        if(id){
+            //call service to get existing user.
+            getUserById(id)
+            .then(response => console.log(response)
+            ).catch(error => console.log(error)
+        )
+            }
+        },[id])
+
     const formik = useFormik({
         initialValues:{
             firstName: "",

@@ -1,0 +1,23 @@
+# This project is shared in:
+- Github, branch: userCRUD-DONE
+
+# Needed packages & software:
+- npm
+- Formik: for form validation
+- Yup: for form validation
+- Vite
+
+## Database
+- Mysql Database: tvmmedia
+- Mysql table: user
+- see user credentials and connection properties in /src/main/resources/application.properties.
+
+# To run this app:
+- Start Mysql database
+- Run the Java Spring Boot app, TvmcrudApplication.java
+- Run React portion of this project:
+    - cd /ui/webapp
+    - npm run dev
+- Visit http://localhost:5173
+
+

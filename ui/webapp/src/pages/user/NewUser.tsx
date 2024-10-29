@@ -13,10 +13,11 @@ const NewUser = () => {
     useEffect(() => {
         if(id){
             //call service to get existing user.
+            setLoader(true);
             getUserById(id)
             .then(response => console.log(response)
             ).catch(error => console.log(error)
-        )
+            ).finally(() => setLoader(false));
             }
         },[id])
 

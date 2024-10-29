@@ -9,29 +9,37 @@ const NewUser = () => {
     const navigate = useNavigate();
     const [error, setErrors] = useState<string>("");
     const [isLoading, setLoader] = useState<boolean>(false);
+    const [initialValues, setInitialValues] = useState<User>({
+            firstName: "",
+            lastName: "",
+            email: ""
+        })
 
     useEffect(() => {
         if(id){
             //call service to get existing user.
             setLoader(true);
             getUserById(id)
-            .then(response => console.log(response)
-            ).catch(error => console.log(error)
+            .then(response => {
+                if(response && response.data){
+                    setInitialValues(response.data);
+                    }
+                }
+            ).catch((error) => setErrors(error.message)
             ).finally(() => setLoader(false));
             }
         },[id])
 
     const formik = useFormik({
-        initialValues:{
-            firstName: "",
-            lastName: "",
-            email: ""
-            },
+        initialValues,
+        enableReinitialize: true,
         onSubmit:(values: User) =>{
             saveOrUpdateUser(values)
             .then((response) => {
-                if(response && response.status == 201){
-                    navigate("/");
+                if(response && response.status === 201){
+                        navigate("/");
+                    }else if(response && response.status === 200){
+                        navigate(`/view/${id}`);
                     }
                 })
             .catch((error) => {

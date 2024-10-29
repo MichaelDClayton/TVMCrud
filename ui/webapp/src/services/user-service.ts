@@ -12,5 +12,8 @@ export const deleteUserById = (id: string) =>{
     }
 
 export const saveOrUpdateUser = (user: User) => {
+    if(user.id != undefined || user.id != null){
+            return apiClient.put<User>(`http://localhost:8080/api/user/${user.id}`, user);
+        }
     return apiClient.post<User>(`http://localhost:8080/api/user`, user);
     }

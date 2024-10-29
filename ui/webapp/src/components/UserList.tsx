@@ -24,14 +24,19 @@ const UserList = ({users}: Props) => {
                 </tbody>
             </table>
             </div>); */
+
            return(
+
+
             <div className="card">
                 <h5 className="card-header">
                 User
                  </h5>
 
-                <div className="card-body">
+
                 {users.map(user =>
+                    <div class="card">
+                      <div class="card-body">
                     <Link key={user.id} to={`/view/${user.id}`} style={{textDecoration: "none"}}>
                         <div className="d-flex justify-content-between border-bottom-1 p-3 text-dark">
                             <div className="card-title m-0">
@@ -40,8 +45,10 @@ const UserList = ({users}: Props) => {
                            </div>
                         </div>
                     </Link>
+                    </div>
+                    </div>
                 )}
-                </div>
+
 
             </div>
 

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 import java.util.stream.Stream;
+/*
 
 @Component
 class DBInitializer implements CommandLineRunner {
@@ -37,4 +38,4 @@ class DBInitializer implements CommandLineRunner {
         System.out.println("*********************");
         System.out.println("*********************");
     }
-}
+}*/

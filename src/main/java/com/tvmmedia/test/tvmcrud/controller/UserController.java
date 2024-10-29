@@ -28,6 +28,7 @@ public class UserController {
 
     @GetMapping("/users")
     Collection<User> users() {
+        log.info("retrieved all users!");
         return userRepository.findAll();
     }
 
@@ -38,14 +39,19 @@ public class UserController {
         return user.map(response -> ResponseEntity.ok().body(response))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-
     @PostMapping("/user")
+    ResponseEntity<User> createUser(@Valid @RequestBody User user) throws URISyntaxException {
+        log.info("Request to create user: {}", user);
+        User savedUser = userRepository.save(user);
+        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+    }
+   /* @PostMapping("/user")
     ResponseEntity<User> createUser(@Valid @RequestBody User user) throws URISyntaxException {
         log.info("Request to create user: {}", user);
         User result = userRepository.save(user);
         return ResponseEntity.created(new URI("/api/user/" + result.getId()))
                 .body(result);
-    }
+    }*/
 
     @PutMapping("/user/{id}")
     ResponseEntity<User> updateUser(@Valid @RequestBody User user) {
@@ -58,6 +64,6 @@ public class UserController {
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         log.info("Request to delete user: {}", id);
         userRepository.deleteById(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

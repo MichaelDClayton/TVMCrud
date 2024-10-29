@@ -43,6 +43,7 @@ const NewUser = () => {
     return(
            <div className="d-flex justify-content-center align-items-center mt-2">
            {error && <p>{error}</p>}
+           {isLoading && <p>Loading...</p>}
                 <div className="container col-sm-4 col-sm-8 col-xs-12">
                     <form onSubmit={formik.handleSubmit}>
                         <div className="mb-3">

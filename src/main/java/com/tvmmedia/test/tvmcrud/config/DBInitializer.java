@@ -7,9 +7,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 import java.util.stream.Stream;
-/*
 
-@Component
+
+/*@Component
 class DBInitializer implements CommandLineRunner {
 
     private final UserRepository repository;

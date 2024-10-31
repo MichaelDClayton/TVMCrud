@@ -2,6 +2,7 @@ package com.tvmmedia.test.tvmcrud;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.tvmmedia.test.tvmcrud.controller.UserController;
 import com.tvmmedia.test.tvmcrud.dao.UserRepository;
 import com.tvmmedia.test.tvmcrud.model.User;
 import org.json.JSONArray;
@@ -10,6 +11,8 @@ import org.junit.After;
 import org.junit.FixMethodOrder;
 import org.junit.jupiter.api.*;
 import org.junit.runners.MethodSorters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -19,7 +22,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.*;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class TvmcrudApplicationTests {
 
@@ -38,7 +41,8 @@ public class TvmcrudApplicationTests {
 	@Autowired
 	private TestRestTemplate restTemplate;
 
-	private User savedUser = null;
+
+	private final Logger log = LoggerFactory.getLogger(TvmcrudApplicationTests.class);
 
 
 
@@ -47,9 +51,12 @@ public class TvmcrudApplicationTests {
 		jdbcTemplate.execute("DROP TABLE IF EXISTS user");
 	}
 
+
+
+
 	@Test
-	@Order(1)
-	public void test1CreateUser() throws JSONException {
+	public void testCreateUser(){
+		log.info("Testing Create User");
 		user = new User();
 		user.setId(Long.valueOf(2102));
 		user.setEmail("mc@aol.com");
@@ -57,51 +64,94 @@ public class TvmcrudApplicationTests {
 		user.setLastName("TestLastName");
 		final ResponseEntity<User> response = restTemplate.postForEntity("/api/user", user, User.class);
 		Assertions.assertEquals(201, response.getStatusCode().value());
-		this.savedUser = response.getBody();
-		Assertions.assertNotNull(this.savedUser.getId());
+		User savedUser = response.getBody();
+		Assertions.assertNotNull(savedUser.getId());
 
-		ResponseEntity<String> response1 = restTemplate.getForEntity("/api/users", String.class);
-		JSONArray accounts = new JSONArray(response1.getBody());
-		List<User> userList = new Gson().fromJson(accounts.toString(), new TypeToken<ArrayList<User>>(){}.getType());
-		User testUser = userList.getFirst();
-		Assertions.assertEquals(200, response1.getStatusCode().value());
-		Assertions.assertEquals("mc@aol.com", testUser.getEmail());
-
-
-		ResponseEntity<String> response2 = restTemplate.getForEntity("/api/users", String.class);
-		JSONArray accounts2 = new JSONArray(response2.getBody());
-		List<User> userList2 = new Gson().fromJson(accounts2.toString(), new TypeToken<ArrayList<User>>(){}.getType());
-		User testUser2 = userList2.getFirst();
-
-		ResponseEntity<?> responseForGetUserById = restTemplate.getForEntity("/api/users/"+testUser2.getId(), Optional.class);
-		Optional<User> retrievedUser = (Optional<User>) responseForGetUserById.getBody();
-		Assertions.assertTrue(retrievedUser.isPresent());
-
-		/////////////////////////////
-		ResponseEntity<String> response3 = restTemplate.getForEntity("/api/users", String.class);
-		JSONArray accounts3 = new JSONArray(response3.getBody());
-		List<User> userList3 = new Gson().fromJson(accounts3.toString(), new TypeToken<ArrayList<User>>(){}.getType());
-		User testUser3 = userList3.getFirst();
-
-		ResponseEntity<?> responseForGetUserById2 = restTemplate.getForEntity("/api/users/"+testUser3.getId(), Optional.class);
-		Optional<User> retrievedUser2 = (Optional<User>) responseForGetUserById2.getBody();
-		Assertions.assertTrue(retrievedUser2.isPresent());
-
-		/////////////////////////////
-
-		ResponseEntity<String> response4 = restTemplate.getForEntity("/api/users", String.class);
-		JSONArray accounts4 = new JSONArray(response4.getBody());
-		List<User> userList4 = new Gson().fromJson(accounts4.toString(), new TypeToken<ArrayList<User>>(){}.getType());
-		User testUser4 = userList4.getFirst();
-
-		restTemplate.delete("/api/user/"+testUser4.getId());
-
-		ResponseEntity<String> responseRetrieved5 = restTemplate.getForEntity("/api/users", String.class);
-		JSONArray accountsRetrieved5 = new JSONArray(responseRetrieved5.getBody());
-		List<User> userListRetrieved5 = new Gson().fromJson(accountsRetrieved5.toString(), new TypeToken<ArrayList<User>>(){}.getType());
-		Assertions.assertTrue(userListRetrieved5.isEmpty());
+		log.info("Deleting user with id {}", savedUser.getId());
+		restTemplate.delete("/api/user/"+savedUser.getId());
+		log.info("Making request for deleted User with id {}", savedUser.getId());
+		ResponseEntity<User> responseForDeletedUser = restTemplate.getForEntity("/api/user/"+savedUser.getId(),User.class, savedUser);
+		User deletedUser = responseForDeletedUser.getBody();
+		Assertions.assertNull(deletedUser);
 	}
 
+	@Test
+	public void testCreateAndUpdateUser(){
+		log.info("Testing Update User");
+		user = new User();
+		user.setId(Long.valueOf(2102));
+		user.setEmail("mc@aol.com");
+		user.setFirstName("TestFirstName");
+		user.setLastName("TestLastName");
+
+		ResponseEntity<User> response = restTemplate.postForEntity("/api/user", user, User.class);
+		Assertions.assertEquals(201, response.getStatusCode().value());
+		User savedUser = response.getBody();
+		Assertions.assertNotNull(savedUser.getId());
+
+		log.info("Updating user with id {} to email: {}", savedUser.getId(), "updated@aol.com");
+		savedUser.setEmail("updated@aol.com");
+		restTemplate.put("/api/user/"+savedUser.getId(), savedUser);
+
+		log.info("Making request for updated user");
+		ResponseEntity<User> updateResonse = restTemplate.getForEntity("/api/user/"+savedUser.getId(),User.class, savedUser);
+		User updatedUser = updateResonse.getBody();
+		Assertions.assertEquals("updated@aol.com", updatedUser.getEmail());
+
+		log.info("Deleting user with id {}", updatedUser.getId());
+		restTemplate.delete("/api/user/"+updatedUser.getId());
+		log.info("Making request for deleted User with id {}", updatedUser.getId());
+		ResponseEntity<User> responseForDeletedUser = restTemplate.getForEntity("/api/user/"+updatedUser.getId(),User.class, savedUser);
+		User deletedUser = responseForDeletedUser.getBody();
+		Assertions.assertNull(deletedUser);
+	}
+
+
+
+
+	@Test
+	public void testCreateAndGetAllUsers() throws JSONException {
+		log.info("Creating User 1 for testCreateAndGetAllUsers");
+		user = new User();
+		//user.setId(Long.valueOf(2102));
+		user.setEmail("mc@aol.com");
+		user.setFirstName("TestFirstName");
+		user.setLastName("TestLastName");
+		ResponseEntity<User> response = restTemplate.postForEntity("/api/user", user, User.class);
+		Assertions.assertEquals(201, response.getStatusCode().value());
+
+		log.info("Creating User 2 for testCreateAndGetAllUsers");
+		user = new User();
+		//user.setId(Long.valueOf(2103));
+		user.setEmail("player@nba.com");
+		user.setFirstName("Patrick");
+		user.setLastName("Ewing");
+		response = restTemplate.postForEntity("/api/user", user, User.class);
+		Assertions.assertEquals(201, response.getStatusCode().value());
+
+		log.info("Making request to get all users");
+		ResponseEntity<String> responseForGetAllUsers = restTemplate.getForEntity("/api/users", String.class);
+		JSONArray accounts = new JSONArray(responseForGetAllUsers.getBody());
+		List<User> userList = new Gson().fromJson(accounts.toString(), new TypeToken<ArrayList<User>>(){}.getType());
+		Assertions.assertEquals(200, responseForGetAllUsers.getStatusCode().value());
+		Assertions.assertEquals(2, userList.size());
+
+		log.info("Deleting user with id {}", userList.get(0).getId());
+		restTemplate.delete("/api/user/"+userList.get(0).getId());
+		log.info("Making request for deleted User with id {}", userList.get(0).getId());
+		ResponseEntity<User> responseForDeletedUser = restTemplate.getForEntity("/api/user/"+userList.get(0).getId(),User.class, userList.get(0));
+		User deletedUser = responseForDeletedUser.getBody();
+		Assertions.assertNull(deletedUser);
+
+		log.info("Deleting user with id {}", userList.get(1).getId());
+		restTemplate.delete("/api/user/"+userList.get(1).getId());
+		log.info("Making request for deleted User with id {}", userList.get(1).getId());
+		responseForDeletedUser = restTemplate.getForEntity("/api/user/"+userList.get(1).getId(),User.class, userList.get(1));
+		deletedUser = responseForDeletedUser.getBody();
+		Assertions.assertNull(deletedUser);
+
+
+	}
 /*
 	@Test
 	@Order(2)

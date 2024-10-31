@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 
 import lombok.*;
 
-import javax.management.ConstructorParameters;
-
 @NoArgsConstructor
 @Data
 @Entity

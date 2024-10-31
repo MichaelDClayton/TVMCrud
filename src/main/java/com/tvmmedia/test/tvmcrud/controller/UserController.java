@@ -10,8 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -20,7 +18,7 @@ import java.util.Optional;
 public class UserController {
 
     private final Logger log = LoggerFactory.getLogger(UserController.class);
-    private UserRepository userRepository;
+    final private UserRepository userRepository;
 
     public UserController(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -40,18 +38,11 @@ public class UserController {
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
     @PostMapping("/user")
-    ResponseEntity<User> createUser(@Valid @RequestBody User user) throws URISyntaxException {
+    ResponseEntity<User> createUser(@Valid @RequestBody User user) {
         log.info("Request to create user: {}", user);
         User savedUser = userRepository.save(user);
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
-   /* @PostMapping("/user")
-    ResponseEntity<User> createUser(@Valid @RequestBody User user) throws URISyntaxException {
-        log.info("Request to create user: {}", user);
-        User result = userRepository.save(user);
-        return ResponseEntity.created(new URI("/api/user/" + result.getId()))
-                .body(result);
-    }*/
 
     @PutMapping("/user/{id}")
     ResponseEntity<User> updateUser(@Valid @RequestBody User user) {

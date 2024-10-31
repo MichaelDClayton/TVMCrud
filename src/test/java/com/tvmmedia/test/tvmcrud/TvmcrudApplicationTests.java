@@ -5,7 +5,6 @@ import com.google.gson.reflect.TypeToken;
 import com.tvmmedia.test.tvmcrud.model.User;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.junit.After;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,22 +20,13 @@ import java.util.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class TvmcrudApplicationTests {
 
-
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
     private TestRestTemplate restTemplate;
 
-
     private final Logger log = LoggerFactory.getLogger(TvmcrudApplicationTests.class);
-
-
-    @After
-    public void after() {
-        jdbcTemplate.execute("DROP TABLE IF EXISTS user");
-    }
-
 
     @Test
     public void testCreateUser() {
@@ -63,7 +53,6 @@ public class TvmcrudApplicationTests {
     public void testCreateAndUpdateUser() {
         log.info("Testing Update User");
         User user = new User();
-        user.setId(Long.valueOf(2102));
         user.setEmail("mc@aol.com");
         user.setFirstName("TestFirstName");
         user.setLastName("TestLastName");
@@ -130,8 +119,5 @@ public class TvmcrudApplicationTests {
         responseForDeletedUser = restTemplate.getForEntity("/api/user/" + userList.get(1).getId(), User.class, userList.get(1));
         deletedUser = responseForDeletedUser.getBody();
         Assertions.assertNull(deletedUser);
-
-
     }
-
 }

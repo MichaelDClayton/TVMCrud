@@ -95,7 +95,6 @@ public class TvmcrudApplicationTests {
     public void testCreateAndGetAllUsers() throws JSONException {
         log.info("Creating User 1 for testCreateAndGetAllUsers");
         User user = new User();
-        //user.setId(Long.valueOf(2102));
         user.setEmail("mc@aol.com");
         user.setFirstName("TestFirstName");
         user.setLastName("TestLastName");
@@ -104,7 +103,6 @@ public class TvmcrudApplicationTests {
 
         log.info("Creating User 2 for testCreateAndGetAllUsers");
         user = new User();
-        //user.setId(Long.valueOf(2103));
         user.setEmail("player@nba.com");
         user.setFirstName("Patrick");
         user.setLastName("Ewing");

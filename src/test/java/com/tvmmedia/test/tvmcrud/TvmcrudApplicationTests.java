@@ -2,7 +2,6 @@ package com.tvmmedia.test.tvmcrud;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.tvmmedia.test.tvmcrud.dao.UserRepository;
 import com.tvmmedia.test.tvmcrud.model.User;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 
